@@ -26,7 +26,7 @@ class Db
 {
     public mysqli|null|false $connect;
     protected string $dbLocation = "127.0.0.1";
-    protected string $dbName = "myshop";
+    protected string $dbName = "vitrine";
     protected string $dbUser = "root";
     protected string $dbPassword = "";
 
