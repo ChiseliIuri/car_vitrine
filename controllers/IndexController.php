@@ -7,8 +7,8 @@
 */
 
 //conectam models
-include_once '../models/CategoriesModel.php';
-include_once '../models/ProductsModel.php';
+// include_once '../models/CategoriesModel.php';
+include_once '../models/ProjectModel.php';
 
 
 //make a test action
@@ -22,16 +22,18 @@ function testAction(){
  * @param $smarty
  */
 function indexAction($smarty){
-    $rsCategories = getAllCatsWithChildren();
-    $rsProducts = getLastProduct(16);
+    // $rsCategories = getAllCatsWithChildren();
+    $rsProjects = getAllProjects();
+    // var_dump($rsProducts);
+    // die();
 
-
-    $smarty->assign('rsCategories', $rsCategories);
-    $smarty->assign('rsProducts', $rsProducts);
+    // $smarty->assign('rsCategories', $rsCategories);
+    $smarty->assign('rsProjects', $rsProjects);
     $smarty->assign('head', 'MyShop');
     $smarty->assign('pageTitle', 'Principala Pagina a site-ului');
 
     loadTemplate($smarty, 'header');
+    loadTemplate($smarty, 'index_carousel');
     loadTemplate($smarty, 'index');
     loadTemplate($smarty, 'footer');
 }

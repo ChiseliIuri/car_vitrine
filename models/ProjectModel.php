@@ -12,29 +12,11 @@
  * @param null $limit limita numarului productelor
  * @return array|false|mixed masiv de producte
  */
-function getLastProduct($limit = null){
+function getAllProjects(){
     $db = new Db;
-    $sql = 'SELECT * FROM products
-            WHERE status = 1
-            ORDER BY id DESC';
+    $sql = 'SELECT * FROM `projects` ORDER BY order_index;';
 
-    if ($limit){
-        $sql .= " LIMIT ".intval($limit);
-    }
     $rs = mysqli_query($db->connect ,$sql);
-    return createSmartyRsArray($rs);
-}
-
-/**
- * Intoarce productele categoriei alelese.
- *
- * @param $catID id-ul categoriei necesare
- * @return array|false|mixed masiv de producte
- */
-function getProductByCat($catID){
-    $db = new Db;
-    $sql = "SELECT * FROM products where status = 1 and category_id = '{$catID}'";
-    $rs = mysqli_query($db->connect, $sql);
     return createSmartyRsArray($rs);
 }
 
@@ -44,12 +26,26 @@ function getProductByCat($catID){
  * @param $prodId id-ul productului
  * @return array|false|mixed
  */
-function getProductById($prodId){
+function getProjectByUri($uri){
     $db = new Db;
-    $sql = "SELECT * FROM products 
-            WHERE id = '{$prodId}'";
+    $sql = "SELECT * FROM projects
+            WHERE uri = '{$uri}'";
     $rs = mysqli_query($db->connect,$sql);
     return mysqli_fetch_assoc($rs);
+}
+
+/**
+ * Intoarce toata info despre un anumit product dupa id-ul lui
+ *
+ * @param $prodId id-ul productului
+ * @return array|false|mixed
+ */
+function getProjectPhotosById($id){
+    $db = new Db;
+    $sql = "SELECT * FROM project_photos
+            WHERE project_id = '{$id}'";
+    $rs = mysqli_query($db->connect,$sql);
+    return createSmartyRsArray($rs);
 }
 
 /**
@@ -149,20 +145,6 @@ function updateProduct($itemId, $itemName, $itemPrice, $itemStatus, $itemDesc, $
  */
 function updateProductImage($itemId, $newFileName){
     return updateProduct($itemId, null, null, null,null, null, $newFileName);
-}
-
-/**
- * Find fucking products from search bar
- *
- * @param string $string
- */
-function findThisFuckingProduct(string $string){
-    $db = new Db;
-    $db = $db->connect;
-    $string = mysqli_escape_string($db, $string);
-    $sql = "SELECT * FROM products WHERE name LIKE '%$string%' and status = 1";
-    $result = mysqli_query($db, $sql);
-    return createSmartyRsArray($result);
 }
 
 /**
