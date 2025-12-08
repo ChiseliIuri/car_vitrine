@@ -6,7 +6,7 @@
     <div class="products">
         {foreach $rsProjects as $item name = projects}
             <a id="prod_{$item['id']}" class="product_card" href="/project/{$item['uri']}/">
-                <div class="product_img"><img src="/images/projects/{$item['logo']}" alt="{$item['uri']}"></div>
+                <div class="product_img"><img src="/images/project_logos/{$item['logo']}" alt="{$item['uri']}"></div>
                 <div class="product_title">{$item['title_en']}</div>
             </a>
         {/foreach}

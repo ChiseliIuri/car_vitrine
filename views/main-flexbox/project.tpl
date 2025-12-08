@@ -3,7 +3,7 @@
     <div id="sync2" class="owl-carousel owl-theme">
         {foreach $projectPhotos as $item name = projectPhotos}
             <div class="item">
-                <img class="carousel_background_project" src="/images/projects/{$item['name']}" alt="">
+                <img class="carousel_background_project" src="/images/project_galery/{$item['name']}" alt="">
             </div>
         {/foreach}
     </div>

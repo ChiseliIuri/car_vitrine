@@ -100,7 +100,55 @@ function mysqli_field_name($result, $field_offset)
     return is_object($properties) ? $properties->name : null;
 }
 
+// Функция для генерации уникального имени
+function generateFileName($originalName) {
+    $ext = pathinfo($originalName, PATHINFO_EXTENSION);
+    // uniqid генерирует ID на основе времени, снижает риск дублей
+    return uniqid('img_', true) . '.' . $ext;
+}
 
+function photosSaving(){
+    $avatarDir = '../www/images/project_logos/';
+    $galleryDir = '../www/images/project_galery/';
+    $logoName = '';
+    $galleryNames = [];
+    // === 1. ОБРАБОТКА ОДИНОЧНОГО ФАЙЛА (Аватар) ===
+    if (isset($_FILES['main_logo']) && $_FILES['main_logo']['error'] === UPLOAD_ERR_OK) {
+        $tmpName = $_FILES['main_logo']['tmp_name'];
+        $fileName = generateFileName($_FILES['main_logo']['name']);
+        
+        $destination = $avatarDir . $fileName;
+        move_uploaded_file($tmpName, $destination) ? $logoName = $fileName : $logoName = '';
+        
+    }
+
+    // === 2. ОБРАБОТКА МНОЖЕСТВЕННЫХ ФАЙЛОВ (Галерея) ===
+    // PHP принимает их в странном формате: $_FILES['gallery']['name'][0], $_FILES['gallery']['name'][1] и т.д.
+    if (isset($_FILES['project_images']) && is_array($_FILES['project_images']['name'])) {
+        // Считаем сколько файлов пришло
+        $count = count($_FILES['project_images']['name']);
+
+        // Подготавливаем запрос (лучше делать это один раз перед циклом)
+        // $stmt = $pdo->prepare("INSERT INTO user_photos (user_id, photo_path) VALUES (?, ?)");
+
+        for ($i = 0; $i < $count; $i++) {
+            // Проверяем на ошибки каждый файл
+            if ($_FILES['project_images']['error'][$i] === UPLOAD_ERR_OK) {
+                
+                $tmpName = $_FILES['project_images']['tmp_name'][$i];
+                $originalName = $_FILES['project_images']['name'][$i];
+                
+                $fileName = generateFileName($originalName);
+                
+                $destination = $galleryDir . $fileName;
+                $galleryNames[$i] = $fileName;
+                move_uploaded_file($tmpName, $destination);
+            }
+        }
+    }
+
+    return ['logo' => $logoName, 'gallery' => $galleryNames];
+}
 
 
 

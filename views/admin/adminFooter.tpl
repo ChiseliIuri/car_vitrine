@@ -1,9 +1,8 @@
 {*footer*}
 
-</div>{*/center column*}
-<div id="footer">
-    Footer
-    <a href="http://localhost/myshop">home</a>
+<script src="/{$templateWebPath}/js/admin.js" type="text/javascript"></script>
+<div class="footer">
+    <a href="/"><div class="button">GO HOME</div></a>
 </div>
 </body>
 </html>

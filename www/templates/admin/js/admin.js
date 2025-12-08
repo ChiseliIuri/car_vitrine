@@ -7,6 +7,47 @@
 // }
 
 
+function editProject(uri){
+    window.location = "/admin/editprojects/" + uri + "/";
+}
+
+function saveProject(e){
+    // Prevent default form submission
+    if (e) e.preventDefault();
+
+    // Sync Quill editor contents to hidden inputs
+    document.getElementById('long_desc_en').value = quillEn.root.innerHTML;
+    document.getElementById('long_desc_ro').value = quillRo.root.innerHTML;
+    document.getElementById('long_desc_ru').value = quillRu.root.innerHTML;
+
+    // Create FormData from form element (handles files automatically)
+    var form = document.getElementById('projectForm');
+    var formData = new FormData(form);
+
+    $.ajax({
+        type: 'POST',
+        async: true,
+        url: '/admin/saveproject/',
+        data: formData,
+        processData: false,  // Important: don't convert FormData to query string
+        contentType: false,  // Important: let browser set content-type with boundary
+        dataType: 'json',
+        success: function (data) {
+            console.log('Success:', data);
+            if (data['success']) {
+                // alert(data['message'] || 'Project saved successfully!');
+                window.location = "/admin/getallprojects/";
+            } else {
+                alert('Error: ' + (data['message'] || 'Failed to save project'));
+            }
+        },
+        error: function(xhr, status, error) {
+            console.log('AJAX Error:', error);
+            alert('Error: ' + error);
+        }
+    });
+}
+
 /**
  *Ajax function for adding new category
  */
@@ -92,41 +133,7 @@ function addProduct(){
     })
 }
 
-/**
- * Update product Data
- *
- * @param itemId
- */
-function updateProduct(itemId){
-    let itemStatus = $('#itemStatus_'+itemId).prop('checked');
 
-    if(!itemStatus){
-        itemStatus = 1
-    } else {
-        itemStatus = 0
-    }
-
-    let postData = {
-        itemId: itemId,
-        itemName: $('#itemName_' + itemId).val(),
-        itemPrice: $('#itemPrice_' + itemId).val(),
-        itemCatId: $('#itemCatId_' + itemId).val(),
-        itemDesc: $('#itemDesc_' + itemId).val(),
-        itemStatus: itemStatus,
-    }
-    $.ajax({
-        type: 'POST',
-        async: false,
-        url: '/admin/updateproduct/',
-        data: postData,
-        dataType: 'json',
-        success: function (data) {
-            console.log(data['message'])
-            alert(data['message'])
-            window.location.replace("/admin/products/")
-        }
-    })
-}
 
 /**
  * Show product under-table in orders table

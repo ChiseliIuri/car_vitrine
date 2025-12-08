@@ -5,13 +5,6 @@
  *
  */
 
-/**
- * Intoarce ultimele producte inregistrate in limita data. daca nu este indicata limita intoarce toate productele
- * in ordine de la ultimul.
- *
- * @param null $limit limita numarului productelor
- * @return array|false|mixed masiv de producte
- */
 function getAllProjects(){
     $db = new Db;
     $sql = 'SELECT * FROM `projects` ORDER BY order_index;';
@@ -20,12 +13,6 @@ function getAllProjects(){
     return createSmartyRsArray($rs);
 }
 
-/**
- * Intoarce toata info despre un anumit product dupa id-ul lui
- *
- * @param $prodId id-ul productului
- * @return array|false|mixed
- */
 function getProjectByUri($uri){
     $db = new Db;
     $sql = "SELECT * FROM projects
@@ -34,18 +21,51 @@ function getProjectByUri($uri){
     return mysqli_fetch_assoc($rs);
 }
 
-/**
- * Intoarce toata info despre un anumit product dupa id-ul lui
- *
- * @param $prodId id-ul productului
- * @return array|false|mixed
- */
 function getProjectPhotosById($id){
     $db = new Db;
     $sql = "SELECT * FROM project_photos
             WHERE project_id = '{$id}'";
     $rs = mysqli_query($db->connect,$sql);
     return createSmartyRsArray($rs);
+}
+
+function insertProject($uri, $order_index, $title_ro, $title_ru, $title_en, $long_descriprion_ro, $long_descriprion_ru,
+                       $long_descriprion_en, $logo, $meta){
+    $db = new Db;
+    $mysqli = $db->connect;
+    $sql = "INSERT INTO `projects` 
+        ( `uri`, `order_index`, `title_ro`, `title_ru`, `title_en`, `long_descriprion_ro`, `long_descriprion_ru`, 
+        `long_descriprion_en`, `logo`, `meta`) 
+        VALUES 
+        (?,?,?,?,?,?,?,?,?,?);";
+
+    $stmt = $mysqli->prepare($sql);
+    $stmt->bind_param('ssssssssss', $uri, $order_index, $title_ro, $title_ru, $title_en,
+        $long_descriprion_ro, $long_descriprion_ru, $long_descriprion_en, $logo, $meta);
+    if ($stmt->execute()) {
+        return $mysqli->insert_id;
+    } else {
+        return false;
+    }
+}
+
+function insertPhotos($id, $photosNames){
+    $db = new Db;
+    $mysqli = $db->connect;
+    $sql = "INSERT INTO `project_photos` 
+        (`project_id`, `name`) 
+        VALUES 
+        (?,?);";
+
+    for($i=0; $i<count($photosNames); $i++){
+        $name = $photosNames[$i];
+        $stmt = $mysqli->prepare($sql);
+        $stmt->bind_param('is', $id, $name);
+        if (!$stmt->execute()) {
+            return false;
+        }
+    }
+    return true;
 }
 
 /**
@@ -71,27 +91,6 @@ function getProductsfromArray($idArray){
 function getProducts(){
     $db = new Db;
     return createSmartyRsArray(mysqli_query($db->connect ,"SELECT * from products ORDER BY category_id"));
-}
-
-/**
- *Insert new product
- *
- * @param $itemName
- * @param $itemPrice
- * @param $itemDesc
- * @param $itemCat
- * @return bool|resource
- */
-function insertProduct($itemName, $itemPrice, $itemDesc, $itemCat){
-    $db = new Db;
-    return mysqli_query($db->connect ,"
-            INSERT INTO products 
-            SET 
-            `name` = '{$itemName}',
-            `price` = '{$itemPrice}',
-            `description` = '{$itemDesc}',
-            `category_id` = '{$itemCat}'
-    ");
 }
 
 /**

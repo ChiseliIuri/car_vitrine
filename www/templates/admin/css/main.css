@@ -1,50 +1,111 @@
-body{
-    padding: 0;
-    display: block;
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    min-height: 800px;
+    font-size: 15px;
 }
+p {
+    all: unset;
+    padding-left: 10px;
+    font-weight: bold;
+    width: 300px;
+}
+.project_main{
+    width: 70%;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    background-color: #e2e2e2;
+    margin-top: 20px;
 
-a {
+}
+input{
+    all: unset;
+    background-color: white;
+}
+input:hover{
+    box-shadow: 0px 0px 8px silver;
+}
+input:focus{
+    box-shadow: 0px 0px 8px silver;
+}
+.project_head{
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    padding: 15px;
+}
+.project_buttons{
+    display: flex;
+    width: 250px;
+    justify-content: space-around;
+}
+.button{
+    border: 1px solid silver;
+    border-radius: 10px;
+    padding: 5px;
+    text-align: center;
+    /*padding-top: 10px;*/
+}
+.add_new_project{
+    background-color: #F2F9ED;
+    color: #8fc174;
+    font-size: 20px;
+    font-weight: bold;
+}
+.add_new_project:hover{
     cursor: pointer;
+    background-color: #d0dec9;
 }
-
-.hideme{
-    display: none;
+.edit_button {
+    background-color: #F2F9ED;
+    color: #8fc174;
+    font-size: 20px;
 }
-
-#header{
-    height: 70px;
+.edit_button:hover{
+    cursor: pointer;
+    background-color: #d0dec9;
+}
+.delete_button{
+    color: #c26f6f;
+    background-color: #e7b2b2;
+    font-size: 20px;
+}
+.delete_button:hover{
+    cursor: pointer;
+    background-color: #d29292;
+}
+.project_head_img {
+    object-fit: cover;
+    border-radius: 100px;
+    width: 80px;
+    height: 80px;
+    margin-right: 20px;
+}
+h1 {
     text-align: center;
 }
 
-#leftColumn{
-    width: 200px;
-    float: left;
+#drop-area {
+    width: 50%;
+    height: 200px;
+    margin: 20px auto;
+    text-align: center;
+    line-height: 200px;
+    border: 2px dashed #ccc;
+    cursor: pointer;
 }
 
-#leftMenu, #loginBox, #registerBox{
-    padding-bottom: 20px;
-}
-
-#centerColumn{
-    width: 600px;
-    float: left;
-}
-
-#footer{
-    clear: both;
-}
-
-.menuCaption{
-    padding: 3px;
-    font-weight: bold;
-}
-
-.cartBox{
-    padding: 5px 0px 5px 0px
-}
-
-#registerBoxHidden {
-    display: none;
+.preview-image {
+    object-fit: cover;
+    width: 100px;
+    height: 100px;
+    margin: 10px;
+    border: 1px solid #ddd;
 }
 
 .showHidden{
@@ -56,4 +117,91 @@ a {
 .quill_container{
     height: 500px;
     width: 100%;
+}
+
+.order_index_main{
+    width: 30px;
+    margin-left: 20px;
+    border-radius: 10px;
+}
+
+.order_index_main_container{
+    width: 76px;
+}
+
+.project_text_input{
+    width: 100%;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: row;
+    /* justify-content: space-around; */
+    /* align-items: center; */
+    background-color: #e2e2e2;
+    margin-top: 20px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    font-weight: bold;
+}
+
+.project_img_input{
+    width: 100%;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: row;
+    /* justify-content: space-around; */
+    /* align-items: center; */
+    background-color: #e2e2e2;
+    margin-top: 20px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    font-weight: bold;
+}
+
+.project_text_input input{
+    width: 100%;
+    margin-right: 10px;
+}
+
+.long_text_input{
+    font-weight: bold;
+    width: 100%;
+    border-radius: 10px;
+    background-color: #e2e2e2;
+    margin-top: 20px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+.long_text_input * {
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+.project_text_input p {
+    width: auto;
+}
+
+.project_drag_and_drop{
+    width: 100%;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    background-color: #e2e2e2;
+    margin-top: 20px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+#drop-area.drag-over {
+    background-color: #eee;
+}
+
+#preview-container {
+    text-align: center;
+}
+
+#projectForm{
+    width: 80%;
 }

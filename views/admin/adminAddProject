@@ -1,0 +1,91 @@
+<div class="container">
+	<h2>Adaugă proiect nou</h2>
+
+	<form id="projectForm" method="post" action="/admin/saveProject.php" enctype="multipart/form-data">
+		<div class="mb-3">
+			<label for="uri">URI (string)</label>
+			<input type="text" id="uri" name="uri" class="form-control" required />
+		</div>
+
+		<div class="mb-3">
+			<label for="order_index">Order index (number)</label>
+			<input type="number" id="order_index" name="order_index" class="form-control" value="0" />
+		</div>
+
+		<div class="mb-3">
+			<label for="title_ro">Title (RO)</label>
+			<input type="text" id="title_ro" name="title_ro" class="form-control" />
+		</div>
+
+		<div class="mb-3">
+			<label for="title_en">Title (EN)</label>
+			<input type="text" id="title_en" name="title_en" class="form-control" />
+		</div>
+
+		<div class="mb-3">
+			<label for="title_ru">Title (RU)</label>
+			<input type="text" id="title_ru" name="title_ru" class="form-control" />
+		</div>
+
+		<!-- Long descriptions: Quill editors -->
+		<div class="mb-3">
+			<label>Long description (EN)</label>
+			<div id="editor_en" style="height:200px; background:#fff;"></div>
+			<input type="hidden" name="long_desc_en" id="long_desc_en" />
+		</div>
+
+		<div class="mb-3">
+			<label>Long description (RO)</label>
+			<div id="editor_ro" style="height:200px; background:#fff;"></div>
+			<input type="hidden" name="long_desc_ro" id="long_desc_ro" />
+		</div>
+
+		<div class="mb-3">
+			<label>Long description (RU)</label>
+			<div id="editor_ru" style="height:200px; background:#fff;"></div>
+			<input type="hidden" name="long_desc_ru" id="long_desc_ru" />
+		</div>
+
+		<div class="mb-3">
+			<label for="main_logo">Main logo (image)</label>
+			<input type="file" id="main_logo" name="main_logo" accept="image/*" class="form-control" />
+		</div>
+
+		<div class="mb-3">
+			<label for="project_images">Project's images (multiple)</label>
+			<input type="file" id="project_images" name="project_images[]" accept="image/*" class="form-control" multiple />
+		</div>
+
+	<div class="mb-3">
+		<button type="submit" class="btn btn-primary">Save project</button>
+	</div>
+	</form>
+
+	<!-- Quill CDN -->
+	<link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+	<script src="https://cdn.quilljs.com/1.3.6/quill.min.js"></script>
+
+	<script>
+		// Global Quill instances (for access in saveProject function)
+		var quillEn, quillRo, quillRu;
+
+		// Initialize Quill editors and attach form handler
+		(function(){
+			quillEn = new Quill('#editor_en', { theme: 'snow' });
+			quillRo = new Quill('#editor_ro', { theme: 'snow' });
+			quillRu = new Quill('#editor_ru', { theme: 'snow' });
+
+			var form = document.getElementById('projectForm');
+			
+			// Wait for saveProject function to be defined (loaded from admin.js)
+			var attachFormHandler = function() {
+				if (typeof saveProject === 'function') {
+					form.addEventListener('submit', saveProject);
+				} else {
+					// Retry in 100ms if saveProject not yet loaded
+					setTimeout(attachFormHandler, 100);
+				}
+			};
+			attachFormHandler();
+		})();
+	</script></div>

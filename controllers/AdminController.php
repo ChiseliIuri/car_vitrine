@@ -29,12 +29,63 @@ function indexAction($smarty){
 
 function getallprojectsAction($smarty){
     $rsProjects = getAllProjects();
+    $smarty->assign('rsProjects', $rsProjects);
 
     $smarty->assign('pageTitle','ADMINKA');
     loadTemplate($smarty, 'adminHeader');
-    echo json_encode($rsProjects);
-    return;
+    loadTemplate($smarty, 'adminProjects');
+    loadTemplate($smarty, 'adminFooter');
 }
+
+function editprojectsAction($smarty){
+    $projId = isset($_GET['id']) ? $_GET['id'] : null;
+
+    $rsProject = getProjectByUri($projId);
+    $smarty->assign('rsProject', $rsProject);
+
+    $smarty->assign('pageTitle','ADMINKA');
+    loadTemplate($smarty, 'adminHeader');
+    loadTemplate($smarty, 'adminProject');
+    loadTemplate($smarty, 'adminFooter');
+}
+
+function addprojectsAction($smarty){
+    // $smarty->assign('rsProject', $rsProject);
+
+    $smarty->assign('pageTitle','ADMINKA');
+    loadTemplate($smarty, 'adminHeader');
+    loadTemplate($smarty, 'adminAddProject');
+    loadTemplate($smarty, 'adminFooter');
+}
+
+function saveprojectAction($smarty){
+    // $smarty->assign('rsProject', $rsProject);
+    $photosNames = photosSaving();
+    $projectId = insertProject(
+        $_POST['uri'],
+        $_POST['order_index'],
+        $_POST['title_ro'],
+        $_POST['title_ru'],
+        $_POST['title_en'],
+        $_POST['long_desc_ro'],
+        $_POST['long_desc_ru'],
+        $_POST['long_desc_en'],
+        $photosNames['logo'],
+        $_POST['meta_tags']
+    );
+    insertPhotos($projectId, $photosNames['gallery']);
+    // var_dump($photosNames['gallery']);
+    $response = ['success' => true, 'message' => 'Project saved successfully!'];
+    echo json_encode($response);
+    // die();
+
+    // $smarty->assign('pageTitle','ADMINKA');
+    // loadTemplate($smarty, 'adminHeader');
+    // loadTemplate($smarty, 'adminAddProject');
+    // loadTemplate($smarty, 'adminFooter');
+}
+
+
 
 /**
  * Action for adding new categories
