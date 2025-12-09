@@ -68,6 +68,44 @@ function insertPhotos($id, $photosNames){
     return true;
 }
 
+function getLogoNameById($projId){
+    $db = new Db;
+    $sql = "SELECT logo FROM projects
+            WHERE id = '{$projId}'";
+    $rs = mysqli_query($db->connect,$sql);
+    return mysqli_fetch_assoc($rs);
+}
+
+function getPhotosNamesById($projId){
+    $db = new Db;
+    $sql = "SELECT name FROM project_photos
+            WHERE project_id = '{$projId}'";
+    $rs = mysqli_query($db->connect,$sql);
+    return createSmartyRsArray($rs);
+}
+
+function deleteProjectById ($projId) {
+    $db = new Db;
+    $sql = "DELETE FROM projects WHERE id = '{$projId}'";
+    return mysqli_query($db->connect ,$sql);
+}
+
+function deletePhotosById ($projId) {
+    $db = new Db;
+    $sql = "DELETE FROM project_photos WHERE project_id = '{$projId}'";
+    return mysqli_query($db->connect ,$sql);
+}
+
+function updateOrderIndex($projId, $newIndex){
+    $db = new Db;
+    $sql = "
+        UPDATE projects
+        SET order_index = '{$newIndex}'
+        WHERE id = '{$projId}';
+    ";
+    return mysqli_query($db->connect,$sql);
+}
+
 /**
  * Primim un masiv de producte din masiv de id-uri
  *

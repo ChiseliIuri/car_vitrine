@@ -48,6 +48,60 @@ function saveProject(e){
     });
 }
 
+function deleteProject(id){
+        // let postData = {'projectId': id};
+
+        // let postData = '?projectId=' + id;
+
+        $.ajax({
+        type: 'GET',
+        async: true,
+        url: '/admin/deleteproject/'+ id +'/',
+        data: '',
+        processData: false,  // Important: don't convert FormData to query string
+        contentType: false,  // Important: let browser set content-type with boundary
+        dataType: 'json',
+        success: function (data) {
+            console.log('Success:', data);
+            if (data['success']) {
+                // alert(data['message'] || 'Project deleted successfully!');
+                window.location = "/admin/getallprojects/";
+            } else {
+                alert('Error: ' + (data['message'] || 'Failed to delete project'));
+            }
+        },
+        error: function(xhr, status, error) {
+            console.log('AJAX Error:', error);
+            alert('Error: ' + error);
+        }
+    });
+}
+
+function updateOrderIndex(projectId, newIndex){
+    let postData = {projectId: projectId, orderIndex: newIndex};
+
+    $.ajax({
+        type: 'POST',
+        async: true,
+        url: '/admin/updateprojectorder/',
+        data: postData,
+        dataType: 'json',
+        success: function (data) {
+            console.log('Success:', data);
+            if (data['success']) {
+                window.location = "/admin/getallprojects/";
+                console.log('Order index updated successfully!');
+            } else {
+                alert('Error: ' + (data['message'] || 'Failed to update order index'));
+            }
+        },
+        error: function(xhr, status, error) {
+            console.log('AJAX Error:', error);
+            alert('Error: ' + error);
+        }
+    });
+}
+
 /**
  *Ajax function for adding new category
  */

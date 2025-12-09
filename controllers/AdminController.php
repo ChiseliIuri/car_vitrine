@@ -74,18 +74,51 @@ function saveprojectAction($smarty){
         $_POST['meta_tags']
     );
     insertPhotos($projectId, $photosNames['gallery']);
-    // var_dump($photosNames['gallery']);
     $response = ['success' => true, 'message' => 'Project saved successfully!'];
     echo json_encode($response);
-    // die();
-
-    // $smarty->assign('pageTitle','ADMINKA');
-    // loadTemplate($smarty, 'adminHeader');
-    // loadTemplate($smarty, 'adminAddProject');
-    // loadTemplate($smarty, 'adminFooter');
 }
 
+function deleteprojectAction($smarty){
+    $projId = isset($_GET['id']) ? $_GET['id'] : null;
+    $logo_name = getLogoNameById($projId);
+    $logo_path = $_SERVER['DOCUMENT_ROOT'] . '/images/project_logos/' . $logo_name['logo'];
+    if ($logo_name['logo'] && file_exists($logo_path)) {
+        unlink($logo_path);
+    }
+    $photosNames = getPhotosNamesById($projId);
+    if ($photosNames) {
+        foreach ($photosNames as $photo) {
+            $photo_path = $_SERVER['DOCUMENT_ROOT'] . '/images/project_galery/' . $photo['name'];
+            if (file_exists($photo_path)) {
+                unlink($photo_path);
+            }
+        }
+    }
 
+    deleteProjectById($projId);
+    deletePhotosById($projId);
+
+    $response = ['success' => true, 'message' => 'Project deleted successfully!'];
+    echo json_encode($response);
+}
+
+function updateprojectorderAction($smarty){
+    $projId = isset($_POST['projectId']) ? $_POST['projectId'] : null;
+    $orderIndex = isset($_POST['orderIndex']) ? $_POST['orderIndex'] : null;
+    // var_dump("projId = " . $projId);
+    // var_dump("orderIndex = " . $orderIndex);
+    // echo "Post = ";
+    // var_dump($_POST);
+    // die();
+
+    $res = updateOrderIndex($projId, $orderIndex);
+    if ($res){
+        $response = ['success' => true, 'message' => 'Order index updated successfully!'];
+    } else {
+        $response = ['success' => false, 'message' => 'Failed to update order index.'];
+    }
+    echo json_encode($response);
+}   
 
 /**
  * Action for adding new categories
