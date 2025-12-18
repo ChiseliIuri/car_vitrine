@@ -41,7 +41,8 @@
             <div id="main_logo"><a href="{$index_lang_url}"><img id="logo" src="/images/icons/logo_without_back.png" alt="logo"></a></div>
 
             <div class="top_list_text"><a href="/about/{$lang}/">{$rsLangs['about_us'][{$lang}]}</a></div>
-            <div class="top_list_text"><a href="/index/{$lang}/#projects">{$rsLangs['our_works'][{$lang}]}</a></div>
+            <div class="top_list_text"><a href="/index/{$lang}/">{$rsLangs['works'][{$lang}]}</a></div>
+            <div class="top_list_text"><a href="/project/{$lang}/">{$rsLangs['projects'][{$lang}]}</a></div>
         </div>
         <div class="second_block top_list_text">
             <div class="lang_buttons_container">

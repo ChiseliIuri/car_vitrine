@@ -19,11 +19,17 @@
     .call-desktop { display: none !important; }
 }
 @media screen and (max-width: 750px) {
+    .project_container{
+        min-height: auto !important;
+    }
+    .first_block div {
+        padding-right: 10px !important;
+    }
     .top_list{
         width: 95% !important;
     }
     .lang_button {
-        font-size: 11px !important;
+        font-size: 8px !important;
     }
     .lang_buttons_container {
         /*min-width: 40px;*/
@@ -145,21 +151,21 @@ body{
 .carousel_background_project{
     height: 500px;
     width: 100%;
-    object-fit: contain;
+    object-fit: cover;
 }
 
 .top_list{
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    width: 80%;
+    width: 66%;
 }
 
 .first_block {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    max-width: 600px;
+    max-width: 608px;
     /*padding-right: 20px;*/
 }
 
@@ -297,7 +303,7 @@ a:hover {
     font-size: 16px;
     font-weight: bold;
     margin-top: 25px;
-    margin-bottom: 50px;
+    margin-bottom: -31px;
 }
 
 .follow_us{

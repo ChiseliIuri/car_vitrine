@@ -170,6 +170,14 @@ function getProjectByUri($uri){
     return mysqli_fetch_assoc($rs);
 }
 
+function getWorkByUri($uri){
+    $db = new Db;
+    $sql = "SELECT * FROM works
+            WHERE uri = '{$uri}'";
+    $rs = mysqli_query($db->connect,$sql);
+    return mysqli_fetch_assoc($rs);
+}
+
 function getProjectById($id){
     $db = new Db;
     $sql = "SELECT * FROM projects
@@ -249,6 +257,14 @@ function getProjectPhotosById($id){
     $db = new Db;
     $sql = "SELECT * FROM project_photos
             WHERE project_id = '{$id}'";
+    $rs = mysqli_query($db->connect,$sql);
+    return createSmartyRsArray($rs);
+}
+
+function getWorkPhotosById($id){
+    $db = new Db;
+    $sql = "SELECT * FROM work_photos
+            WHERE work_id = '{$id}'";
     $rs = mysqli_query($db->connect,$sql);
     return createSmartyRsArray($rs);
 }
