@@ -18,6 +18,7 @@
                 <div id="main_logo"><a href="/"><img id="logo" src="/images/icons/logo_without_back.png" alt="logo"></a></div>
                 <div class="top_list_text"><a href="/admin/en/">SETTINGS</a></div>
                 <div class="top_list_text"><a href="/admin/getallprojects/en/">PROJECTS</a></div>
+                <div class="top_list_text"><a href="/admin/getallworks/en/">OUR_WORKS</a></div>
                 <div class="top_list_text"><a href="/admin/getalllangs/en/">TRANSLATES</a></div>
                 <div class="top_list_text"><a href="/admin/getabout/en/">ABOUT</a></div>
             </div>

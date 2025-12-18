@@ -1,38 +1,38 @@
 <div class="container">
-    <h2>Edit {$rsProject['title_en']} project</h2>
+    <h2>Edit {$rsWork['title_en']} work</h2>
 
     <form class="inputsForm" id="projectForm" method="post" action="/" enctype="multipart/form-data">
 
         <div class="project_text_input" style="display: none;">
             <p>ID</p>
-            <input type="text" id="id" name="id" class="form-control" value="{$rsProject['id']}" required />
+            <input type="text" id="id" name="id" class="form-control" value="{$rsWork['id']}" required />
         </div>
         <div class="project_text_input">
             <p>URI (string)</p>
-            <input type="text" id="uri" name="uri" class="form-control" value="{$rsProject['uri']}" required />
+            <input type="text" id="uri" name="uri" class="form-control" value="{$rsWork['uri']}" required />
         </div>
-        <p style="color: red;">Atentie URI trebuie sa fie strict in formatul: 'test' sau 'test_test', deci doar litere minuscule si delimitatorul '_' intre cuvinte, de exemplu: audi_rally_peoject</p>
+        <p style="color: red;">Atentie URI trebuie sa fie UNICAL si strict in formatul: 'test_' sau 'test_test', deci doar litere minuscule si delimitatorul '_', de exemplu: audi_rally_peoject sau audi_</p>
         <div class="project_text_input">
             <p>Order index (number)</p>
-            <input type="number" id="order_index" name="order_index" class="form-control" value="{$rsProject['order_index']}" />
+            <input type="number" id="order_index" name="order_index" class="form-control" value="{$rsWork['order_index']}" />
         </div>
         <p style="color: green;">Acest index indica in ce ordine se va arata acest proiect in lista, cel mai mic numar e cea mai mare ordine</p>
         <div class="project_text_input">
             <p>Title (RO)</p>
-            <input type="text" id="title_ro" name="title_ro" class="form-control" value="{$rsProject['title_ro']}" />
+            <input type="text" id="title_ro" name="title_ro" class="form-control" value="{$rsWork['title_ro']}" />
         </div>
         <div class="project_text_input">
             <p>Title (EN)</p>
-            <input type="text" id="title_en" name="title_en" class="form-control" value="{$rsProject['title_en']}" />
+            <input type="text" id="title_en" name="title_en" class="form-control" value="{$rsWork['title_en']}" />
         </div>
         <div class="project_text_input">
             <p>Title (RU)</p>
-            <input type="text" id="title_ru" name="title_ru" class="form-control" value="{$rsProject['title_ru']}" />
+            <input type="text" id="title_ru" name="title_ru" class="form-control" value="{$rsWork['title_ru']}" />
         </div>
 
         <div class="project_text_input">
             <p>Meta Tags</p>
-            <input type="text" id="meta_tags" name="meta_tags" class="form-control" value="{$rsProject['meta']}" />
+            <input type="text" id="meta_tags" name="meta_tags" class="form-control" value="{$rsWork['meta']}" />
         </div>
 
         <div class="long_text_input">
@@ -83,17 +83,17 @@
             quillRo = new Quill('#editor_ro', { theme: 'snow' });
             quillRu = new Quill('#editor_ru', { theme: 'snow' });
 
-            quillEn.root.innerHTML = '{$rsProject['long_descriprion_en']}';
-            quillRo.root.innerHTML = '{$rsProject['long_descriprion_ro']}';
-            quillRu.root.innerHTML = '{$rsProject['long_descriprion_ru']}';
+            quillEn.root.innerHTML = '{$rsWork['long_descriprion_en']}';
+            quillRo.root.innerHTML = '{$rsWork['long_descriprion_ro']}';
+            quillRu.root.innerHTML = '{$rsWork['long_descriprion_ru']}';
             {*quillRo.setText({$rsProject['long_descriprion_ro']})*}
             {*quillRu.setText({$rsProject['long_descriprion_ru']})*}
 
             var form = document.getElementById('projectForm');
             var attachFormHandler = function() {
-                if (typeof saveEditProject === 'function') {
+                if (typeof saveEditWork === 'function') {
 
-                    form.addEventListener('submit', saveEditProject);
+                    form.addEventListener('submit', saveEditWork);
                 } else {
                     setTimeout(attachFormHandler, 100);
                 }

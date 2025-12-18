@@ -149,6 +149,57 @@ function getallprojectsAction($smarty){
     loadTemplate($smarty, 'adminFooter');
 }
 
+function getallworksAction($smarty){
+    $rsProjects = getAllWorks();
+    $smarty->assign('rsProjects', $rsProjects);
+
+    $smarty->assign('pageTitle','ADMINKA');
+    loadTemplate($smarty, 'adminHeader');
+    loadTemplate($smarty, 'adminWorks');
+    loadTemplate($smarty, 'adminFooter');
+}
+
+function editworksAction($smarty){
+    $projId = isset($_GET['id']) ? $_GET['id'] : null;
+
+    $rsWork = getWorkById($projId);
+    $smarty->assign('rsWork', $rsWork);
+
+    $smarty->assign('pageTitle','ADMINKA');
+    loadTemplate($smarty, 'adminHeader');
+    loadTemplate($smarty, 'adminEditWork');
+    loadTemplate($smarty, 'adminFooter');
+}
+
+function addworksAction($smarty){
+    // $smarty->assign('rsProject', $rsProject);
+
+    $smarty->assign('pageTitle','ADMINKA');
+    loadTemplate($smarty, 'adminHeader');
+    loadTemplate($smarty, 'adminAddWork');
+    loadTemplate($smarty, 'adminFooter');
+}
+
+function saveworkAction($smarty){
+    // $smarty->assign('rsProject', $rsProject);
+    $photosNames = workPhotosSaving();
+    $projectId = insertWork(
+        $_POST['uri'],
+        $_POST['order_index'],
+        $_POST['title_ro'],
+        $_POST['title_ru'],
+        $_POST['title_en'],
+        $_POST['long_desc_ro'],
+        $_POST['long_desc_ru'],
+        $_POST['long_desc_en'],
+        $photosNames['logo'],
+        $_POST['meta_tags']
+    );
+    insertWorkPhotos($projectId, $photosNames['gallery']);
+    $response = ['success' => true, 'message' => 'Project saved successfully!'];
+    echo json_encode($response);
+}
+
 function editprojectsAction($smarty){
     $projId = isset($_GET['id']) ? $_GET['id'] : null;
 
@@ -183,12 +234,6 @@ function saveeditedprojectAction($smarty){
         }
     }
 
-//    $photosNames = [];
-//    if (isset($_FILES['main_logo']) || isset($_FILES['project_images'])){
-//        $photosNames = photosSaving();
-//    } else {
-//        $photosNames = ["logo" => ""];
-//    }
     $photosNames = photosSaving();
 
     updateProjectById(
@@ -209,55 +254,57 @@ function saveeditedprojectAction($smarty){
         insertPhotos($_POST['id'], $photosNames['gallery']);
     }
 
-//    echo "main_logo = ";
-//    var_dump($_FILES['main_logo']);
-//    echo "project_images = ";
-//    var_dump($_FILES['project_images']);
-//    if (empty($_FILES['project_images']['name'][0])) {
-//        echo "array is empty";
-//    } else {
-//        echo "array is NOT empty";
-//    }
-//    die();
-
-
     $response = ['success' => true, 'message' => 'Project updated successfully!'];
     echo json_encode($response);
 
 }
 
-//project_images = array(6) {
-//    ["name"]=>
-//  array(1) {
-//        [0]=>
-//    string(0) ""
-//  }
-//  ["full_path"]=>
-//  array(1) {
-//        [0]=>
-//    string(0) ""
-//  }
-//  ["type"]=>
-//  array(1) {
-//        [0]=>
-//    string(0) ""
-//  }
-//  ["tmp_name"]=>
-//  array(1) {
-//        [0]=>
-//    string(0) ""
-//  }
-//  ["error"]=>
-//  array(1) {
-//        [0]=>
-//    int(4)
-//  }
-//  ["size"]=>
-//  array(1) {
-//        [0]=>
-//    int(0)
-//  }
-//}
+function saveeditedworkAction($smarty){
+    if (!empty($_FILES['main_logo']['name'])){
+        $logo_name = getWorkLogoNameById($_POST['id']);
+        $logo_path = $_SERVER['DOCUMENT_ROOT'] . '/images/work_logos/' . $logo_name['logo'];
+        if ($logo_name['logo'] && file_exists($logo_path)) {
+            unlink($logo_path);
+        }
+    }
+
+    if (!empty($_FILES['project_images']['name'][0])) {
+        $photosNames = getWorkPhotosNamesById($_POST['id']);
+        if ($photosNames) {
+            foreach ($photosNames as $photo) {
+                $photo_path = $_SERVER['DOCUMENT_ROOT'] . '/images/work_galery/' . $photo['name'];
+                if (file_exists($photo_path)) {
+                    unlink($photo_path);
+                }
+            }
+            deleteWorkPhotosById($_POST['id']);
+        }
+    }
+
+    $photosNames = workPhotosSaving();
+
+    updateWorkById(
+        $_POST['id'],
+        $_POST['uri'],
+        $_POST['order_index'],
+        $_POST['title_ro'],
+        $_POST['title_ru'],
+        $_POST['title_en'],
+        $_POST['long_desc_ro'],
+        $_POST['long_desc_ru'],
+        $_POST['long_desc_en'],
+        $photosNames['logo'],
+        $_POST['meta_tags']
+    );
+
+    if (!empty($_FILES['project_images']['name'][0])){
+        insertWorkPhotos($_POST['id'], $photosNames['gallery']);
+    }
+
+    $response = ['success' => true, 'message' => 'Project updated successfully!'];
+    echo json_encode($response);
+
+}
 
 function addprojectsAction($smarty){
     // $smarty->assign('rsProject', $rsProject);
@@ -312,14 +359,46 @@ function deleteprojectAction($smarty){
     echo json_encode($response);
 }
 
+function deleteworkAction($smarty){
+    $workId = isset($_GET['id']) ? $_GET['id'] : null;
+    $logo_name = getWorkLogoNameById($workId);
+    $logo_path = $_SERVER['DOCUMENT_ROOT'] . '/images/work_logos/' . $logo_name['logo'];
+    if ($logo_name['logo'] && file_exists($logo_path)) {
+        unlink($logo_path);
+    }
+    $photosNames = getWorkPhotosNamesById($workId);
+    if ($photosNames) {
+        foreach ($photosNames as $photo) {
+            $photo_path = $_SERVER['DOCUMENT_ROOT'] . '/images/work_galery/' . $photo['name'];
+            if (file_exists($photo_path)) {
+                unlink($photo_path);
+            }
+        }
+    }
+
+    deleteWorkById($workId);
+    deleteWorkPhotosById($workId);
+
+    $response = ['success' => true, 'message' => 'Project deleted successfully!'];
+    echo json_encode($response);
+}
+
+function updateworkorderAction($smarty){
+    $workId = isset($_POST['projectId']) ? $_POST['projectId'] : null;
+    $orderIndex = isset($_POST['orderIndex']) ? $_POST['orderIndex'] : null;
+
+    $res = updateWorkOrderIndex($workId, $orderIndex);
+    if ($res){
+        $response = ['success' => true, 'message' => 'Order index updated successfully!'];
+    } else {
+        $response = ['success' => false, 'message' => 'Failed to update order index.'];
+    }
+    echo json_encode($response);
+} 
+
 function updateprojectorderAction($smarty){
     $projId = isset($_POST['projectId']) ? $_POST['projectId'] : null;
     $orderIndex = isset($_POST['orderIndex']) ? $_POST['orderIndex'] : null;
-    // var_dump("projId = " . $projId);
-    // var_dump("orderIndex = " . $orderIndex);
-    // echo "Post = ";
-    // var_dump($_POST);
-    // die();
 
     $res = updateOrderIndex($projId, $orderIndex);
     if ($res){
@@ -329,241 +408,3 @@ function updateprojectorderAction($smarty){
     }
     echo json_encode($response);
 }   
-
-/**
- * Action for adding new categories
- *
- * @return json array with response data
- */
-// function addnewcatAction(){
-//     $catName = $_POST['newCategoryName'];
-//     $catParentId = $_POST['generalCatId'];
-//     $res = insertCat($catName, $catParentId);
-
-//     if($res){
-//         $resData['success'] = 1;
-//         $resData['message'] = 'Category Added';
-//     } else {
-//         $resData['success'] = 0;
-//         $resData['message'] = 'Error on adding category.';
-//     }
-
-//     echo json_encode($resData);
-//     return;
-// }
-
-/**
- * Category administration page
- *
- * @param $smarty
- */
-// function categoryAction($smarty){
-//     $rsCategories = getAllCategories();
-//     $rsMainCategories = getAllMainCategories();
-
-//     $smarty->assign('rsCategories', $rsCategories);
-//     $smarty->assign('rsMainCategories', $rsMainCategories);
-//     $smarty->assign('pageTitle', 'ADMINKA');
-
-//     loadTemplate($smarty, 'adminHeader');
-//     loadTemplate($smarty, 'adminCategory');
-//     loadTemplate($smarty, 'adminFooter');
-// }
-
-/**
- * Realize process of updating categories data
- *
- * @return false|string return json
- */
-
-// function updatecategoryAction(){
-
-//     $itemId = $_POST['itemId'];
-//     $parentId = $_POST['parentId'];
-//     $name = $_POST['newName'];
-
-//     if (updateCategoryData($itemId, $parentId, $name)){
-//         $resData['success'] = 1;
-//         $resData['message'] = 'Successfully updated';
-//     } else {
-//         $resData['success'] = 0;
-//         $resData['message'] = "OOPS, Some error occurred during data updating :(";
-//     }
-//     echo json_encode($resData);
-//     return;
-// }
-
-/**
- * Page of products control
- *
- * @param type smarty
- */
-
-// function productsAction($smarty){
-//     // $rsCategories = getAllChildCategories();
-//     $rsProducts = getProducts();
-
-//     // $smarty->assign('rsCategories', $rsCategories);
-//     $smarty->assign('rsProducts', $rsProducts);
-//     $smarty->assign('pageTitle', 'Site Administration');
-
-//     loadTemplate($smarty,'adminHeader');
-//     loadTemplate($smarty, 'adminProducts');
-//     loadTemplate($smarty, 'adminFooter');
-// }
-
-/**
- * Add new product
- *
- * @return json array
- */
-// function addproductAction(){
-//     $itemName = $_POST['itemName'];
-//     $itemPrice = $_POST['itemPrice'];
-//     $itemDesc = $_POST['itemDesc'];
-//     $itemCat = $_POST['itemCatId'];
-
-//     if (insertProduct($itemName, $itemPrice, $itemDesc, $itemCat)){
-//         $resData['success'] = 1;
-//         $resData['message'] = 'Changes was successful introduced';
-//     } else {
-//         $resData['success'] = 0;
-//         $resData['message'] = 'Some error occurred during introducing data';
-//     }
-//     echo json_encode($resData);
-//     return;
-// }
-
-/**
- * Update product data
- *
- * @return json array
- */
-// function updateproductAction(){
-//     $itemId = $_POST['itemId'];
-//     $itemName = $_POST['itemName'];
-//     $itemPrice = $_POST['itemPrice'];
-//     $itemStatus = $_POST['itemStatus'];
-//     $itemDesc = $_POST['itemDesc'];
-//     $itemCat = $_POST['itemCatId'];
-
-//     $res = updateProduct($itemId, $itemName, $itemPrice, $itemStatus, $itemDesc, $itemCat);
-
-//     if ($res){
-//         $resData['success'] = 1;
-//         $resData['message'] = "Updated with success;";
-//     } else {
-//         $resData['success'] = 0;
-//         $resData['message'] = "Some Error occurred!";
-//     }
-//     echo json_encode($resData);
-//     return;
-// }
-
-/**
- * Uploading image
- *
- */
-// function uploadAction(){
-//     $maxSize = 2 * 1024 * 1024;
-//     $itemId = $_POST['itemId'];
-//     //primim extensia fileului incarcabil
-//     $ext = pathinfo($_FILES['filename']['name'], PATHINFO_EXTENSION);
-//     //cream denumirea fileului
-//     $newFileName = $itemId . '.' . $ext;
-
-//     if ($_FILES['filename']['size']>$maxSize){
-//         echo ('File size exceeds 2 MB');
-//         return;
-//     }
-
-//     //controlam daca fileul este incarcat
-//     if (is_uploaded_file($_FILES['filename']['tmp_name'])){
-//         //daca fileul este incarcat il mutam din directoria teporara in directoria finala
-//         $res = move_uploaded_file($_FILES['filename']['tmp_name'], $_SERVER['DOCUMENT_ROOT'] . '/images/products/' . $newFileName);
-//         if ($res){
-//             $res = updateProductImage($itemId, $newFileName);
-//             if ($res) {
-//                 redirect('/admin/products/');
-//             }
-//         }
-//     } else {
-//         echo ("Error of loading file");
-//     }
-// }
-
-/**
- * Main controller for order page
- *
- * @param $smarty
- */
-// function ordersAction($smarty){
-//     $rsOrders = getOrders();
-
-//     $smarty->assign('rsOrders', $rsOrders);
-//     $smarty->assign('pageTitle', 'Orders');
-
-//     loadTemplate($smarty, 'adminHeader');
-//     loadTemplate($smarty, 'adminOrders');
-//     loadTemplate($smarty, 'adminFooter');
-// }
-
-/**
- * Set order status
- *
- */
-// function setorderstatusAction(){
-//     $itemId = $_POST['itemId'];
-//     $status = $_POST['status'];
-
-//     if (updateOrderStatus($itemId, $status)){
-//         $resData['success'] = 1;
-//     } else {
-//         $resData['success'] = 0;
-//         $resData['message'] = 'Error of setting new status';
-//     }
-
-//     echo json_encode($resData);
-// }
-
-/**
- * Set Order Date Payment
- *
- */
-// function setorderdatePaymentAction(){
-//     $itemId = $_POST['itemId'];
-//     $datePayment = $_POST['datePayment'];
-
-//     if (updateOrderDatePayment($itemId, $datePayment)){
-//         $resData['success'] = 1;
-//     } else {
-//         $resData['success'] = 0;
-//         $resData['message'] = 'Error of setting payment date';
-//     }
-
-//     echo json_encode($resData);
-// }
-
-// function destroycategoryAction() {
-//     $catId = intval($_POST['catId']);
-//     if (deleteCategoryById($catId)) {
-//         $resData['success'] = 1;
-//         $resData['message'] = 'Category Successfully deleted';
-//     } else {
-//         $resData['success'] = 0;
-//         $resData['message'] = 'Stoto ne tac uioba';
-//     }
-//     echo json_encode($resData);
-// }
-
-// function destroyproductAction() {
-//     $prodId = intval($_POST['prodId']);
-//     if (deleteProductById($prodId)) {
-//         $resData['success'] = 1;
-//         $resData['message'] = 'Product Successfully deleted';
-//     } else {
-//         $resData['success'] = 0;
-//         $resData['message'] = 'Stoto ne tac uioba';
-//     }
-//     echo json_encode($resData);
-// }

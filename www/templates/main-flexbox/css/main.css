@@ -439,6 +439,7 @@ margin-left: 8%
 }
 
 .project_container{
+    min-height: 1000px;
     margin-top: 50px;
     display: flex;
     justify-content: center;

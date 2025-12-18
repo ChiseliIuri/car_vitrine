@@ -150,6 +150,49 @@ function photosSaving(){
     return ['logo' => $logoName, 'gallery' => $galleryNames];
 }
 
+function workPhotosSaving(){
+    $avatarDir = '../www/images/work_logos/';
+    $galleryDir = '../www/images/work_galery/';
+    $logoName = '';
+    $galleryNames = [];
+    // === 1. ОБРАБОТКА ОДИНОЧНОГО ФАЙЛА (Аватар) ===
+    if (!empty($_FILES['main_logo']['name']) && $_FILES['main_logo']['error'] === UPLOAD_ERR_OK) {
+        $tmpName = $_FILES['main_logo']['tmp_name'];
+        $fileName = generateFileName($_FILES['main_logo']['name']);
+        
+        $destination = $avatarDir . $fileName;
+        move_uploaded_file($tmpName, $destination) ? $logoName = $fileName : $logoName = '';
+        
+    }
+
+    // === 2. ОБРАБОТКА МНОЖЕСТВЕННЫХ ФАЙЛОВ (Галерея) ===
+    // PHP принимает их в странном формате: $_FILES['gallery']['name'][0], $_FILES['gallery']['name'][1] и т.д.
+    if (!empty($_FILES['project_images']['name'][0]) && is_array($_FILES['project_images']['name'])) {
+        // Считаем сколько файлов пришло
+        $count = count($_FILES['project_images']['name']);
+
+        // Подготавливаем запрос (лучше делать это один раз перед циклом)
+        // $stmt = $pdo->prepare("INSERT INTO user_photos (user_id, photo_path) VALUES (?, ?)");
+
+        for ($i = 0; $i < $count; $i++) {
+            // Проверяем на ошибки каждый файл
+            if ($_FILES['project_images']['error'][$i] === UPLOAD_ERR_OK) {
+                
+                $tmpName = $_FILES['project_images']['tmp_name'][$i];
+                $originalName = $_FILES['project_images']['name'][$i];
+                
+                $fileName = generateFileName($originalName);
+                
+                $destination = $galleryDir . $fileName;
+                $galleryNames[$i] = $fileName;
+                move_uploaded_file($tmpName, $destination);
+            }
+        }
+    }
+
+    return ['logo' => $logoName, 'gallery' => $galleryNames];
+}
+
 function lang() {
     $lang = isset($_GET['lang']) ? $_GET['lang'] : DEFAULT_LANG;
     $lang_url = $lang . '/';

@@ -13,6 +13,14 @@ function getAllProjects(){
     return createSmartyRsArray($rs);
 }
 
+function getAllWorks(){
+    $db = new Db;
+    $sql = 'SELECT * FROM `works` ORDER BY order_index;';
+
+    $rs = mysqli_query($db->connect ,$sql);
+    return createSmartyRsArray($rs);
+}
+
 function getAboutModel(){
     $db = new Db;
     $sql = 'SELECT * FROM `pages` WHERE id = "about";';
@@ -170,6 +178,43 @@ function getProjectById($id){
     return mysqli_fetch_assoc($rs);
 }
 
+function getWorkById($id){
+    $db = new Db;
+    $sql = "SELECT * FROM works
+            WHERE id = '{$id}'";
+    $rs = mysqli_query($db->connect,$sql);
+    return mysqli_fetch_assoc($rs);
+}
+function updateWorkById($id, $uri, $order_index, $title_ro, $title_ru, $title_en, $long_desc_ro, $long_desc_ru, $long_desc_en, $logo, $meta){
+    $db = new Db;
+    $sql = "";
+    if (!empty($logo)) {
+        $sql = "
+        UPDATE works
+        SET uri = '{$uri}', order_index = '{$order_index}', title_ro = '{$title_ro}', title_ro = '{$title_ro}', title_ru = '{$title_ru}',
+            title_en = '{$title_en}', long_descriprion_ro = '{$long_desc_ro}', long_descriprion_ru = '{$long_desc_ru}', long_descriprion_en = '{$long_desc_en}',
+            logo = '{$logo}', meta = '{$meta}'
+        WHERE id = {$id};
+        ";
+    } else {
+        $sql = "
+        UPDATE works
+        SET uri = '{$uri}', order_index = '{$order_index}', title_ro = '{$title_ro}', title_ro = '{$title_ro}', title_ru = '{$title_ru}',
+            title_en = '{$title_en}', long_descriprion_ro = '{$long_desc_ro}', long_descriprion_ru = '{$long_desc_ru}', long_descriprion_en = '{$long_desc_en}',
+            meta = '{$meta}'
+        WHERE id = {$id};
+        ";
+    }
+//    $sql = "
+//        UPDATE projects
+//        SET uri = '{$uri}', order_index = '{$order_index}', title_ro = '{$title_ro}', title_ro = '{$title_ro}', title_ru = '{$title_ru}',
+//            title_en = '{$title_en}', long_descriprion_ro = '{$long_desc_ro}', long_descriprion_ro = '{$long_desc_ru}', long_descriprion_ro = '{$long_desc_en}',
+//            " . !empty($logo) ? "logo = '{$logo}'," : "," ." meta = '{$meta}'
+//        WHERE id = {$id};
+//    ";
+    return mysqli_query($db->connect,$sql);
+}
+
 function updateProjectById($id, $uri, $order_index, $title_ro, $title_ru, $title_en, $long_desc_ro, $long_desc_ru, $long_desc_en, $logo, $meta){
     $db = new Db;
     $sql = "";
@@ -228,6 +273,26 @@ function insertProject($uri, $order_index, $title_ro, $title_ru, $title_en, $lon
     }
 }
 
+function insertWork($uri, $order_index, $title_ro, $title_ru, $title_en, $long_descriprion_ro, $long_descriprion_ru,
+                       $long_descriprion_en, $logo, $meta){
+    $db = new Db;
+    $mysqli = $db->connect;
+    $sql = "INSERT INTO `works` 
+        ( `uri`, `order_index`, `title_ro`, `title_ru`, `title_en`, `long_descriprion_ro`, `long_descriprion_ru`, 
+        `long_descriprion_en`, `logo`, `meta`) 
+        VALUES 
+        (?,?,?,?,?,?,?,?,?,?);";
+
+    $stmt = $mysqli->prepare($sql);
+    $stmt->bind_param('ssssssssss', $uri, $order_index, $title_ro, $title_ru, $title_en,
+        $long_descriprion_ro, $long_descriprion_ru, $long_descriprion_en, $logo, $meta);
+    if ($stmt->execute()) {
+        return $mysqli->insert_id;
+    } else {
+        return false;
+    }
+}
+
 function insertPhotos($id, $photosNames){
     $db = new Db;
     $mysqli = $db->connect;
@@ -245,6 +310,53 @@ function insertPhotos($id, $photosNames){
         }
     }
     return true;
+}
+
+function insertWorkPhotos($id, $photosNames){
+    $db = new Db;
+    $mysqli = $db->connect;
+    $sql = "INSERT INTO `work_photos` 
+        (`work_id`, `name`) 
+        VALUES 
+        (?,?);";
+
+    for($i=0; $i<count($photosNames); $i++){
+        $name = $photosNames[$i];
+        $stmt = $mysqli->prepare($sql);
+        $stmt->bind_param('is', $id, $name);
+        if (!$stmt->execute()) {
+            return false;
+        }
+    }
+    return true;
+}
+
+function getWorkLogoNameById($workId){
+    $db = new Db;
+    $sql = "SELECT logo FROM works
+            WHERE id = '{$workId}'";
+    $rs = mysqli_query($db->connect,$sql);
+    return mysqli_fetch_assoc($rs);
+}
+
+function getWorkPhotosNamesById($workId){
+    $db = new Db;
+    $sql = "SELECT name FROM work_photos
+            WHERE work_id = '{$workId}'";
+    $rs = mysqli_query($db->connect,$sql);
+    return createSmartyRsArray($rs);
+}
+
+function deleteWorkPhotosById ($workId) {
+    $db = new Db;
+    $sql = "DELETE FROM work_photos WHERE work_id = '{$workId}'";
+    return mysqli_query($db->connect ,$sql);
+}
+
+function deleteWorkById ($workId) {
+    $db = new Db;
+    $sql = "DELETE FROM works WHERE id = '{$workId}'";
+    return mysqli_query($db->connect ,$sql);
 }
 
 function getLogoNameById($projId){
@@ -281,6 +393,16 @@ function updateOrderIndex($projId, $newIndex){
         UPDATE projects
         SET order_index = '{$newIndex}'
         WHERE id = '{$projId}';
+    ";
+    return mysqli_query($db->connect,$sql);
+}
+
+function updateWorkOrderIndex($workId, $newIndex){
+    $db = new Db;
+    $sql = "
+        UPDATE works
+        SET order_index = '{$newIndex}'
+        WHERE id = '{$workId}';
     ";
     return mysqli_query($db->connect,$sql);
 }

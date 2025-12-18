@@ -1,7 +1,7 @@
 <div class="container">
-	<h2>Adaugă proiect nou</h2>
+	<h2>Adaugă lucrare nouă</h2>
 
-	<form class="inputsForm" id="projectForm" method="post" action="/" enctype="multipart/form-data">
+	<form class="inputsForm" id="workForm" method="post" action="/" enctype="multipart/form-data">
 		
 		<div class="project_text_input">
 			<p>URI (string)</p>
@@ -79,10 +79,10 @@
 			quillRo = new Quill('#editor_ro', { theme: 'snow' });
 			quillRu = new Quill('#editor_ru', { theme: 'snow' });
 
-			var form = document.getElementById('projectForm');
+			var form = document.getElementById('workForm');
 			var attachFormHandler = function() {
-				if (typeof saveProject === 'function') {
-					form.addEventListener('submit', saveProject);
+				if (typeof saveWork === 'function') {
+					form.addEventListener('submit', saveWork);
 				} else {
 					setTimeout(attachFormHandler, 100);
 				}
