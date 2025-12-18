@@ -1,5 +1,5 @@
 <div class="container">
-    <a href="/admin/addprojects/"><div class="button add_new_project">+ Add New Project</div></a>
+    <a href="/admin/addprojects/en/"><div class="button add_new_project">+ Add New Project</div></a>
     {foreach $rsProjects as $item name = projects}
         <div class="project_main">
             <div class="project_head">

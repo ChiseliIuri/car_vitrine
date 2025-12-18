@@ -1,7 +1,7 @@
 <div class="container">
 	<h2>Adaugă proiect nou</h2>
 
-	<form id="projectForm" method="post" action="/" enctype="multipart/form-data">
+	<form class="inputsForm" id="projectForm" method="post" action="/" enctype="multipart/form-data">
 		
 		<div class="project_text_input">
 			<p>URI (string)</p>

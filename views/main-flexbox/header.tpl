@@ -4,7 +4,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>NXFAB</title>
+    <meta name="description" content="
+    {if isset($meta)}
+        {$meta}
+    {else}
+        Professional auto tuning atelier. Custom projects, quality, and experience. Turbo kits,  Exhaust & intake systems,  ECU tuning,  Custom wiring.
+    {/if}
+    ">
+    <title>
+        {if isset($title_head)}
+            {$title_head}
+        {else}
+            NXFAB Moldova Tuning
+        {/if}
+    </title>
     <script type="text/javascript" src="/js/jquery_2.1.3.js"></script>
     <script type="text/javascript" src="/js/owl.carousel.min.js"></script>
     <script type="text/javascript" src="/js/main.js"></script>
@@ -25,12 +38,47 @@
 <div class="top_bar">
     <div class="top_list">
         <div class="first_block">
-            <div id="main_logo"><a href="/"><img id="logo" src="/images/icons/logo_without_back.png" alt="logo"></a></div>
-            <div class="top_list_text"><a href="#">ABOUT US</a></div>
-            <div class="top_list_text"><a href="#">OUR WORKS</a></div>
+            <div id="main_logo"><a href="{$index_lang_url}"><img id="logo" src="/images/icons/logo_without_back.png" alt="logo"></a></div>
+
+            <div class="top_list_text"><a href="/about/{$lang}/">{$rsLangs['about_us'][{$lang}]}</a></div>
+            <div class="top_list_text"><a href="/index/{$lang}/#projects">{$rsLangs['our_works'][{$lang}]}</a></div>
         </div>
         <div class="second_block top_list_text">
-            <a href="#">ADDRESS</a>
+            <div class="lang_buttons_container">
+                {if $lang eq 'en'}
+                <div class="lang_button">EN</div>
+                <div id="hidden_lang" style="display: none;">
+                        <a href="{$currentUrl}ru/"><div class="lang_button">RU</div></a>
+                        <a href="{$currentUrl}ro/"><div class="lang_button">RO</div></a>
+                    {elseif $lang eq 'ru'}
+                    <div class="lang_button">RU</div>
+                    <div id="hidden_lang" style="display: none;">
+                        <a href="{$currentUrl}ro/"><div class="lang_button">RO</div></a>
+                        <a href="{$currentUrl}en/"><div class="lang_button">EN</div></a>
+                    {else}
+                    <div class="lang_button">RO</div>
+                    <div id="hidden_lang" style="display: none;">
+                        <a href="{$currentUrl}ru/"><div class="lang_button">RU</div></a>
+                        <a href="{$currentUrl}en/"><div class="lang_button">EN</div></a>
+                    {/if}
+
+                </div>
+            </div>
+            <script>
+                container = document.querySelector(".lang_buttons_container");
+                container.addEventListener("click", ()=>{
+                    hidden_lang = document.getElementById("hidden_lang");
+                    display = hidden_lang.style.display;
+                    display === "none" ? hidden_lang.style.display = "block" : hidden_lang.style.display = "none";
+                });
+                // container.addEventListener("focusout", ()=>{
+                //     document.getElementById("hidden_lang").style.display = "none";
+                // });
+            </script>
+            <a href="/address/{$lang_url}">{$rsLangs['address'][{$lang}]}</a>
         </div>
     </div>
 </div>
+
+
+

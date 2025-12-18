@@ -18,13 +18,125 @@ $smarty->assign('templateWebPath', TEMPLATE_ADMIN_WEB_PATH);
 
 function indexAction($smarty){
 
-    // $rsCategories = getAllMainCategories();
+    $rsSettings = getAllSettings();
 
-    // $smarty->assign('rsCategories', $rsCategories);
+    // $rsCategories = getAllMainCategories();
+//    echo "settings:";
+//    var_dump($rsSettings);
+//    die();
+    $smarty->assign('rsSettings', $rsSettings);
     $smarty->assign('pageTitle','ADMINKA');
     loadTemplate($smarty, 'adminHeader');
     loadTemplate($smarty, 'admin');
     loadTemplate($smarty, 'adminFooter');
+}
+
+function getaboutAction ($smarty) {
+    $data = getAboutModel();
+//    var_dump($data);
+//    die();
+
+    $smarty->assign('data', $data);
+    $smarty->assign('pageTitle','ADMINKA');
+    loadTemplate($smarty, 'adminHeader');
+    loadTemplate($smarty, 'addAbout');
+    loadTemplate($smarty, 'adminFooter');
+}
+
+function addaboutAction ($smarty) {
+//    if (!empty($_FILES['main_logo']['name'])){
+//        $logo_name = getLogoNameById($_POST['id']);
+//        $logo_path = $_SERVER['DOCUMENT_ROOT'] . '/images/project_logos/' . $logo_name['logo'];
+//        if ($logo_name['logo'] && file_exists($logo_path)) {
+//            unlink($logo_path);
+//        }
+//    }
+
+    if (!empty($_FILES['project_images']['name'][0])) {
+        $photosNames = getAboutPhotosNames();
+        if ($photosNames) {
+            foreach ($photosNames as $photo) {
+                $photo_path = $_SERVER['DOCUMENT_ROOT'] . '/images/project_galery/' . $photo['name'];
+                if (file_exists($photo_path)) {
+                    unlink($photo_path);
+                }
+            }
+            deletePagesPhotosById("about");
+        }
+    }
+
+//    $photosNames = [];
+//    if (isset($_FILES['main_logo']) || isset($_FILES['project_images'])){
+//        $photosNames = photosSaving();
+//    } else {
+//        $photosNames = ["logo" => ""];
+//    }
+    $photosNames = photosSaving();
+
+    saveAboutModel(
+        "about",
+        $_POST['title_en'],
+        $_POST['title_ro'],
+        $_POST['title_ru'],
+        $_POST['long_desc_en'],
+        $_POST['long_desc_ro'],
+        $_POST['long_desc_ru'],
+        $_POST['meta']
+    );
+
+    if (!empty($_FILES['project_images']['name'][0])){
+        insertPAgesPhotos("about", $photosNames['gallery']);
+    }
+
+
+    $response = ['success' => true, 'message' => 'Project updated successfully!'];
+    echo json_encode($response);
+}
+
+function getalllangsAction($smarty){
+
+    $rsLangs = getAllTranslates();
+    $smarty->assign('rsLangs', $rsLangs);
+    $smarty->assign('pageTitle','ADMINKA');
+    loadTemplate($smarty, 'adminHeader');
+    loadTemplate($smarty, 'translates');
+    loadTemplate($smarty, 'adminFooter');
+}
+
+function savelangsAction($smarty) {
+    saveAllTranslates(
+        !empty($_POST['about_us_en']) ? strtoupper($_POST['about_us_en']) : '',
+        !empty($_POST['about_us_ro']) ? strtoupper($_POST['about_us_ro']) : '',
+        !empty($_POST['about_us_ru']) ? strtoupper($_POST['about_us_ru']) : '',
+        !empty($_POST['address_en']) ? strtoupper($_POST['address_en']) : '',
+        !empty($_POST['address_ro']) ? strtoupper($_POST['address_ro']) : '',
+        !empty($_POST['address_ru']) ? strtoupper($_POST['address_ru']) : '',
+        !empty($_POST['all_projects_en']) ? strtoupper($_POST['all_projects_en']) : '',
+        !empty($_POST['all_projects_ro']) ? strtoupper($_POST['all_projects_ro']) : '',
+        !empty($_POST['all_projects_ru']) ? strtoupper($_POST['all_projects_ru']) : '',
+        !empty($_POST['deliver_quality_en']) ? strtoupper($_POST['deliver_quality_en']) : '',
+        !empty($_POST['deliver_quality_ro']) ? strtoupper($_POST['deliver_quality_ro']) : '',
+        !empty($_POST['deliver_quality_ru']) ? strtoupper($_POST['deliver_quality_ru']) : '',
+        !empty($_POST['our_works_en']) ? strtoupper($_POST['our_works_en']) : '',
+        !empty($_POST['our_works_ro']) ? strtoupper($_POST['our_works_ro']) : '',
+        !empty($_POST['our_works_ru']) ? strtoupper($_POST['our_works_ru']) : ''
+    );
+
+    $response = ['success' => true, 'message' => 'Settings saved successfully!'];
+    echo json_encode($response);
+}
+
+function savesettingsAction($smarty) {
+    saveAllSettings(
+        $_POST['phone'],
+        $_POST['facebook'],
+        $_POST['instagram'],
+        $_POST['address'],
+        $_POST['work_time']
+    );
+
+    $response = ['success' => true, 'message' => 'Settings saved successfully!'];
+    echo json_encode($response);
 }
 
 function getallprojectsAction($smarty){
@@ -40,14 +152,112 @@ function getallprojectsAction($smarty){
 function editprojectsAction($smarty){
     $projId = isset($_GET['id']) ? $_GET['id'] : null;
 
-    $rsProject = getProjectByUri($projId);
+    $rsProject = getProjectById($projId);
     $smarty->assign('rsProject', $rsProject);
 
     $smarty->assign('pageTitle','ADMINKA');
     loadTemplate($smarty, 'adminHeader');
-    loadTemplate($smarty, 'adminProject');
+    loadTemplate($smarty, 'adminEditProject');
     loadTemplate($smarty, 'adminFooter');
 }
+
+function saveeditedprojectAction($smarty){
+    if (!empty($_FILES['main_logo']['name'])){
+        $logo_name = getLogoNameById($_POST['id']);
+        $logo_path = $_SERVER['DOCUMENT_ROOT'] . '/images/project_logos/' . $logo_name['logo'];
+        if ($logo_name['logo'] && file_exists($logo_path)) {
+            unlink($logo_path);
+        }
+    }
+
+    if (!empty($_FILES['project_images']['name'][0])) {
+        $photosNames = getPhotosNamesById($_POST['id']);
+        if ($photosNames) {
+            foreach ($photosNames as $photo) {
+                $photo_path = $_SERVER['DOCUMENT_ROOT'] . '/images/project_galery/' . $photo['name'];
+                if (file_exists($photo_path)) {
+                    unlink($photo_path);
+                }
+            }
+            deletePhotosById($_POST['id']);
+        }
+    }
+
+//    $photosNames = [];
+//    if (isset($_FILES['main_logo']) || isset($_FILES['project_images'])){
+//        $photosNames = photosSaving();
+//    } else {
+//        $photosNames = ["logo" => ""];
+//    }
+    $photosNames = photosSaving();
+
+    updateProjectById(
+        $_POST['id'],
+        $_POST['uri'],
+        $_POST['order_index'],
+        $_POST['title_ro'],
+        $_POST['title_ru'],
+        $_POST['title_en'],
+        $_POST['long_desc_ro'],
+        $_POST['long_desc_ru'],
+        $_POST['long_desc_en'],
+        $photosNames['logo'],
+        $_POST['meta_tags']
+    );
+
+    if (!empty($_FILES['project_images']['name'][0])){
+        insertPhotos($_POST['id'], $photosNames['gallery']);
+    }
+
+//    echo "main_logo = ";
+//    var_dump($_FILES['main_logo']);
+//    echo "project_images = ";
+//    var_dump($_FILES['project_images']);
+//    if (empty($_FILES['project_images']['name'][0])) {
+//        echo "array is empty";
+//    } else {
+//        echo "array is NOT empty";
+//    }
+//    die();
+
+
+    $response = ['success' => true, 'message' => 'Project updated successfully!'];
+    echo json_encode($response);
+
+}
+
+//project_images = array(6) {
+//    ["name"]=>
+//  array(1) {
+//        [0]=>
+//    string(0) ""
+//  }
+//  ["full_path"]=>
+//  array(1) {
+//        [0]=>
+//    string(0) ""
+//  }
+//  ["type"]=>
+//  array(1) {
+//        [0]=>
+//    string(0) ""
+//  }
+//  ["tmp_name"]=>
+//  array(1) {
+//        [0]=>
+//    string(0) ""
+//  }
+//  ["error"]=>
+//  array(1) {
+//        [0]=>
+//    int(4)
+//  }
+//  ["size"]=>
+//  array(1) {
+//        [0]=>
+//    int(0)
+//  }
+//}
 
 function addprojectsAction($smarty){
     // $smarty->assign('rsProject', $rsProject);

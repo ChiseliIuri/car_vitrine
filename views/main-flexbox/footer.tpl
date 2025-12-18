@@ -1,15 +1,15 @@
 <div class="footer">
-    <div class="call-desktop"><img src="/images/icons/call.svg" alt="call"  width="30" height="30"><span style="margin-left: 15px; font-size: 30px">+373 60 000 000</span></div>
-    <a class="call-mobile" href="tel:+37360000000">
+    <div class="call-desktop"><img src="/images/icons/call.svg" alt="call"  width="30" height="30"><span style="margin-left: 15px; font-size: 30px">{$rsSettings['0']['value']}</span></div>
+    <a class="call-mobile" href="tel:{$rsSettings['0']['value']}">
         <img src="/images/icons/call.svg" alt="call"  width="30" height="30"><span style="margin-left: 15px; font-size: 30px">CALL US</span>
     </a>
     <div class="follow_us">
         <p>FOLLOW US</p>
         <div class="follow_links">
-            <a href="https://facebook.com">
+            <a href="{$rsSettings['1']['value']}">
                 <img src="/images/icons/facebook.svg" alt="facebook"  width="50" height="50">
             </a>
-            <a href="https://instagram.com">
+            <a href="{$rsSettings['2']['value']}">
                 <img src="/images/icons/instagram.svg" alt="instagram"  width="50" height="50">
             </a>
 
@@ -48,6 +48,28 @@
         updateView();
     </script>
 </div>
-<a id="up" href="#up_anchor">UP</a>
+{*<a id="up" href="#up_anchor">UP</a>*}
+<div id="up">UP</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const btn = document.getElementById('up');
+
+        window.addEventListener('scroll', function () {
+            if (window.scrollY > 300) { // появится после 300px
+                btn.classList.add('show');
+            } else {
+                btn.classList.remove('show');
+            }
+        });
+
+        btn.addEventListener('click', function () {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+    });
+</script>
 </body>
 </html>

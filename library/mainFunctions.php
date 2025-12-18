@@ -113,7 +113,7 @@ function photosSaving(){
     $logoName = '';
     $galleryNames = [];
     // === 1. ОБРАБОТКА ОДИНОЧНОГО ФАЙЛА (Аватар) ===
-    if (isset($_FILES['main_logo']) && $_FILES['main_logo']['error'] === UPLOAD_ERR_OK) {
+    if (!empty($_FILES['main_logo']['name']) && $_FILES['main_logo']['error'] === UPLOAD_ERR_OK) {
         $tmpName = $_FILES['main_logo']['tmp_name'];
         $fileName = generateFileName($_FILES['main_logo']['name']);
         
@@ -124,7 +124,7 @@ function photosSaving(){
 
     // === 2. ОБРАБОТКА МНОЖЕСТВЕННЫХ ФАЙЛОВ (Галерея) ===
     // PHP принимает их в странном формате: $_FILES['gallery']['name'][0], $_FILES['gallery']['name'][1] и т.д.
-    if (isset($_FILES['project_images']) && is_array($_FILES['project_images']['name'])) {
+    if (!empty($_FILES['project_images']['name'][0]) && is_array($_FILES['project_images']['name'])) {
         // Считаем сколько файлов пришло
         $count = count($_FILES['project_images']['name']);
 
@@ -150,20 +150,24 @@ function photosSaving(){
     return ['logo' => $logoName, 'gallery' => $galleryNames];
 }
 
+function lang() {
+    $lang = isset($_GET['lang']) ? $_GET['lang'] : DEFAULT_LANG;
+    $lang_url = $lang . '/';
+    $index_lang_url = "/";
+    if ($lang !== DEFAULT_LANG) {
+        $index_lang_url = "/index/{$lang}/";
+    }
+    return [
+        'lang' => $lang,
+        'lang_url' => $lang_url,
+        'index_lang_url' => $index_lang_url
+    ];
+}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+function formatLangArray($array) {
+    $langs = [];
+    for ($i = 0; $i < count($array); $i++) {
+        $langs[$array[$i]['lang_index']] = $array[$i];
+    }
+    return $langs;
+}

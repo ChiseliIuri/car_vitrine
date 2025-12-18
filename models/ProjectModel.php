@@ -13,12 +13,191 @@ function getAllProjects(){
     return createSmartyRsArray($rs);
 }
 
+function getAboutModel(){
+    $db = new Db;
+    $sql = 'SELECT * FROM `pages` WHERE id = "about";';
+
+    return  createSmartyRsArray(mysqli_query($db->connect ,$sql));
+}
+
+function getAboutPhotos(){
+    $db = new Db;
+    $sql = "SELECT * FROM pages_photos
+            WHERE page_id = 'about'";
+    $rs = mysqli_query($db->connect,$sql);
+    return createSmartyRsArray($rs);
+}
+
+function getAboutPhotosNames(){
+    $db = new Db;
+    $sql = "SELECT name FROM pages_photos
+            WHERE page_id = 'about'";
+    $rs = mysqli_query($db->connect,$sql);
+    return createSmartyRsArray($rs);
+}
+
+function saveAboutModel($id, $title_en, $title_ro, $title_ru, $long_descriprion_en, $long_descriprion_ro, $long_descriprion_ru, $meta){
+    $db = new Db;
+    $mysqli = $db->connect;
+    if (empty(getAboutModel())) {
+        $sql = "INSERT INTO `pages` 
+        ( `id`, `title_en`, `title_ro`, `title_ru`, `long_desc_en`, `long_desc_ro`, 
+        `long_desc_ru`, `meta`) 
+        VALUES 
+        (?,?,?,?,?,?,?,?);";
+
+        $stmt = $mysqli->prepare($sql);
+        $stmt->bind_param('ssssssss', $id, $title_en,  $title_ro, $title_ru,
+            $long_descriprion_en, $long_descriprion_ro, $long_descriprion_ru, $meta);
+        if ($stmt->execute()) {
+            return $mysqli->insert_id;
+        } else {
+            return false;
+        }
+    } else {
+        $sql = "
+        UPDATE pages
+        SET title_en = '{$title_en}', title_ro = '{$title_ro}', title_ru = '{$title_ru}',
+            long_desc_en = '{$long_descriprion_en}', long_desc_ro = '{$long_descriprion_ro}', long_desc_ru = '{$long_descriprion_ru}',
+            meta = '{$meta}'
+        WHERE id = '{$id}';
+        ";
+        return  mysqli_query($db->connect,$sql);
+    }
+}
+
+function insertPAgesPhotos($id, $photosNames){
+    $db = new Db;
+    $mysqli = $db->connect;
+    $sql = "INSERT INTO `pages_photos` 
+        (`page_id`, `name`) 
+        VALUES 
+        (?,?);";
+
+    for($i=0; $i<count($photosNames); $i++){
+        $name = $photosNames[$i];
+        $stmt = $mysqli->prepare($sql);
+        $stmt->bind_param('ss', $id, $name);
+        if (!$stmt->execute()) {
+            return false;
+        }
+    }
+    return true;
+}
+
+function deletePagesPhotosById ($pageId) {
+    $db = new Db;
+    $sql = "DELETE FROM pages_photos WHERE page_id = '{$pageId}'";
+    return mysqli_query($db->connect ,$sql);
+}
+
+function getAllSettings(){
+    $db = new Db;
+    $sql = "SELECT * FROM settings ORDER BY id;";
+    $rs = mysqli_query($db->connect,$sql);
+    return createSmartyRsArray($rs);
+}
+
+function getAllTranslates(){
+    $db = new Db;
+    $sql = "SELECT * FROM translates;";
+    $rs = mysqli_query($db->connect,$sql);
+    return createSmartyRsArray($rs);
+}
+
+function saveAllTranslates($about_us_en, $about_us_ro, $about_us_ru, $address_en, $address_ro, $address_ru,
+                           $all_projects_en, $all_projects_ro, $all_projects_ru, $deliver_quality_en, $deliver_quality_ro, $deliver_quality_ru,
+                           $our_works_en, $our_works_ro, $our_works_ru){
+
+    $db = new Db;
+    $sql = "
+        UPDATE translates t1 JOIN translates t2 JOIN translates t3 JOIN translates t4 JOIN translates t5
+        ON t1.lang_index = 'our_works' AND t2.lang_index = 'deliver_quality'
+               AND t3.lang_index = 'all_projects' AND t4.lang_index = 'address'
+               AND t5.lang_index = 'about_us'
+        SET t1.en = '{$our_works_en}',
+           t2.en = '{$deliver_quality_en}',
+           t3.en = '{$all_projects_en}',
+           t4.en = '{$address_en}',
+           t5.en = '{$about_us_en}',
+           t1.ru = '{$our_works_ru}',
+           t2.ru = '{$deliver_quality_ru}',
+           t3.ru = '{$all_projects_ru}',
+           t4.ru = '{$address_ru}',
+           t5.ru = '{$about_us_ru}',
+           t1.ro = '{$our_works_ro}',
+           t2.ro = '{$deliver_quality_ro}',
+           t3.ro = '{$all_projects_ro}',
+           t4.ro = '{$address_ro}',
+           t5.ro = '{$about_us_ro}';
+        ";
+
+    return  mysqli_query($db->connect,$sql);
+}
+
+function saveAllSettings ($phone, $facebook, $instagram, $address, $work_time){
+    $db = new Db;
+    $sql = "";
+
+    $sql = "
+        UPDATE settings
+        SET value = CASE name 
+                            WHEN 'phone' THEN '{$phone}' 
+                            WHEN 'facebook' THEN '{$facebook}' 
+                            WHEN 'instagram' THEN '{$instagram}' 
+                            WHEN 'address' THEN '{$address}' 
+                            WHEN 'work_time' THEN '{$work_time}' 
+                            ELSE ''
+                            END
+        WHERE name IN('phone', 'facebook', 'instagram', 'address', 'work_time');
+        ";
+    return mysqli_query($db->connect,$sql);
+}
+
 function getProjectByUri($uri){
     $db = new Db;
     $sql = "SELECT * FROM projects
             WHERE uri = '{$uri}'";
     $rs = mysqli_query($db->connect,$sql);
     return mysqli_fetch_assoc($rs);
+}
+
+function getProjectById($id){
+    $db = new Db;
+    $sql = "SELECT * FROM projects
+            WHERE id = '{$id}'";
+    $rs = mysqli_query($db->connect,$sql);
+    return mysqli_fetch_assoc($rs);
+}
+
+function updateProjectById($id, $uri, $order_index, $title_ro, $title_ru, $title_en, $long_desc_ro, $long_desc_ru, $long_desc_en, $logo, $meta){
+    $db = new Db;
+    $sql = "";
+    if (!empty($logo)) {
+        $sql = "
+        UPDATE projects
+        SET uri = '{$uri}', order_index = '{$order_index}', title_ro = '{$title_ro}', title_ro = '{$title_ro}', title_ru = '{$title_ru}',
+            title_en = '{$title_en}', long_descriprion_ro = '{$long_desc_ro}', long_descriprion_ru = '{$long_desc_ru}', long_descriprion_en = '{$long_desc_en}',
+            logo = '{$logo}', meta = '{$meta}'
+        WHERE id = {$id};
+        ";
+    } else {
+        $sql = "
+        UPDATE projects
+        SET uri = '{$uri}', order_index = '{$order_index}', title_ro = '{$title_ro}', title_ro = '{$title_ro}', title_ru = '{$title_ru}',
+            title_en = '{$title_en}', long_descriprion_ro = '{$long_desc_ro}', long_descriprion_ru = '{$long_desc_ru}', long_descriprion_en = '{$long_desc_en}',
+            meta = '{$meta}'
+        WHERE id = {$id};
+        ";
+    }
+//    $sql = "
+//        UPDATE projects
+//        SET uri = '{$uri}', order_index = '{$order_index}', title_ro = '{$title_ro}', title_ro = '{$title_ro}', title_ru = '{$title_ru}',
+//            title_en = '{$title_en}', long_descriprion_ro = '{$long_desc_ro}', long_descriprion_ro = '{$long_desc_ru}', long_descriprion_ro = '{$long_desc_en}',
+//            " . !empty($logo) ? "logo = '{$logo}'," : "," ." meta = '{$meta}'
+//        WHERE id = {$id};
+//    ";
+    return mysqli_query($db->connect,$sql);
 }
 
 function getProjectPhotosById($id){

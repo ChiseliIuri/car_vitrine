@@ -19,6 +19,25 @@
     .call-desktop { display: none !important; }
 }
 @media screen and (max-width: 750px) {
+    .top_list{
+        width: 95% !important;
+    }
+    .lang_button {
+        font-size: 11px !important;
+    }
+    .lang_buttons_container {
+        /*min-width: 40px;*/
+        margin-right: 10px !important;
+    }
+    .product_card {
+        width: 335px !important;
+    }
+    .product_title{
+        width: 335px !important;
+    }
+    .products {
+        width: 340px !important;
+    }
     .carousel_text{
         font-size: 20px !important;
         top: 405px !important;
@@ -141,7 +160,7 @@ body{
     flex-direction: row;
     justify-content: space-between;
     max-width: 600px;
-    padding-right: 20px;
+    /*padding-right: 20px;*/
 }
 
 .first_block div{
@@ -219,13 +238,15 @@ a:hover {
     max-width: 1200px;
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
+    margin-top: 30px;
+    justify-content: space-around;
     align-items: center;
     flex-wrap: wrap;
 }
 
 .product_card{
-    background-color: #F9F9F9;
+    /*background-color: #F9F9F9;*/
+    background-color: #eaecec;
     border-radius: 10px;
     width: 370px;
     height: 390px;
@@ -237,6 +258,7 @@ a:hover {
 
 .product_card:hover{
     cursor: pointer;
+    box-shadow: 0 0 7px 3px #c3c4c4;
 }
 
 .product_img{
@@ -326,11 +348,24 @@ a:hover {
     bottom: 10%;
     left: 90%;
     z-index: 50;
-    width: 30px;
+    margin-right: 10px;
+    width: 25px;
     background-color: silver;
-    opacity: 50%;
+    /*opacity: 50%;*/
     padding: 20px;
     border-radius: 20px;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 2s ease;
+}
+
+#up.show {
+    opacity: 0.5;
+    visibility: visible;
+}
+
+#up:hover {
+    cursor: pointer;
 }
 
 #address{
@@ -348,6 +383,8 @@ a:hover {
 }
 
 .load_more{
+    display: flex;
+    align-self: center;
     background-color: silver;
     color: #676666;
     padding: 20px;
@@ -424,3 +461,22 @@ margin-left: 8%
     font-weight: bold;
     font-size: 30px;
 }
+
+.lang_buttons_container{
+    /*min-width: 40px;*/
+    margin-right: 20px;
+    margin-top: -3px;
+}
+
+.lang_button{
+    font-size: 25px;
+    color: #0C2B4E;
+    padding: 5px;
+    background-color: white;
+}
+
+.lang_button:hover{
+    cursor: pointer;
+    background-color: silver;
+}
+

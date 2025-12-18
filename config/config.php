@@ -11,6 +11,9 @@ const PathPrefix = '../controllers/';
 define('PathPostfix', 'Controller.php');
 //<
 
+//Limba principala
+define('DEFAULT_LANG',"en");
+
 //> sablonul folosit
 $template = 'default';
 $templateFlex = 'main-flexbox';
