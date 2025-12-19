@@ -117,9 +117,15 @@ function savelangsAction($smarty) {
         !empty($_POST['deliver_quality_en']) ? strtoupper($_POST['deliver_quality_en']) : '',
         !empty($_POST['deliver_quality_ro']) ? strtoupper($_POST['deliver_quality_ro']) : '',
         !empty($_POST['deliver_quality_ru']) ? strtoupper($_POST['deliver_quality_ru']) : '',
-        !empty($_POST['our_works_en']) ? strtoupper($_POST['our_works_en']) : '',
-        !empty($_POST['our_works_ro']) ? strtoupper($_POST['our_works_ro']) : '',
-        !empty($_POST['our_works_ru']) ? strtoupper($_POST['our_works_ru']) : ''
+        !empty($_POST['all_works_en']) ? strtoupper($_POST['all_works_en']) : '',
+        !empty($_POST['all_works_ro']) ? strtoupper($_POST['all_works_ro']) : '',
+        !empty($_POST['all_works_ru']) ? strtoupper($_POST['all_works_ru']) : '',
+        !empty($_POST['projects_en']) ? strtoupper($_POST['projects_en']) : '',
+        !empty($_POST['projects_ro']) ? strtoupper($_POST['projects_ro']) : '',
+        !empty($_POST['projects_ru']) ? strtoupper($_POST['projects_ru']) : '',
+        !empty($_POST['works_en']) ? strtoupper($_POST['works_en']) : '',
+        !empty($_POST['works_ro']) ? strtoupper($_POST['works_ro']) : '',
+        !empty($_POST['works_ru']) ? strtoupper($_POST['works_ru']) : ''
     );
 
     $response = ['success' => true, 'message' => 'Settings saved successfully!'];

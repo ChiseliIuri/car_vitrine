@@ -18,12 +18,12 @@
         </div>
         <p style="color: green;">Acest index indica in ce ordine se va arata acest proiect in lista, cel mai mic numar e cea mai mare ordine</p>
         <div class="project_text_input">
-            <p>Title (RO)</p>
-            <input type="text" id="title_ro" name="title_ro" class="form-control" value="{$rsWork['title_ro']}" />
-        </div>
-        <div class="project_text_input">
             <p>Title (EN)</p>
             <input type="text" id="title_en" name="title_en" class="form-control" value="{$rsWork['title_en']}" />
+        </div>
+        <div class="project_text_input">
+            <p>Title (RO)</p>
+            <input type="text" id="title_ro" name="title_ro" class="form-control" value="{$rsWork['title_ro']}" />
         </div>
         <div class="project_text_input">
             <p>Title (RU)</p>

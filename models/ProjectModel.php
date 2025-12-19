@@ -115,29 +115,36 @@ function getAllTranslates(){
 
 function saveAllTranslates($about_us_en, $about_us_ro, $about_us_ru, $address_en, $address_ro, $address_ru,
                            $all_projects_en, $all_projects_ro, $all_projects_ru, $deliver_quality_en, $deliver_quality_ro, $deliver_quality_ru,
-                           $our_works_en, $our_works_ro, $our_works_ru){
+                           $all_works_en, $all_works_ro, $all_works_ru, $projects_en, $projects_ro, $projects_ru,
+                           $works_en, $works_ro, $works_ru){
 
     $db = new Db;
     $sql = "
-        UPDATE translates t1 JOIN translates t2 JOIN translates t3 JOIN translates t4 JOIN translates t5
-        ON t1.lang_index = 'our_works' AND t2.lang_index = 'deliver_quality'
+        UPDATE translates t1 JOIN translates t2 JOIN translates t3 JOIN translates t4 JOIN translates t5 JOIN translates t6 JOIN translates t7
+        ON t1.lang_index = 'all_works' AND t2.lang_index = 'deliver_quality'
                AND t3.lang_index = 'all_projects' AND t4.lang_index = 'address'
-               AND t5.lang_index = 'about_us'
-        SET t1.en = '{$our_works_en}',
+               AND t5.lang_index = 'about_us' AND t6.lang_index = 'works' AND t7.lang_index = 'projects'
+        SET t1.en = '{$all_works_en}',
            t2.en = '{$deliver_quality_en}',
            t3.en = '{$all_projects_en}',
            t4.en = '{$address_en}',
            t5.en = '{$about_us_en}',
-           t1.ru = '{$our_works_ru}',
+           t6.en = '{$works_en}',
+           t7.en = '{$projects_en}',
+           t1.ru = '{$all_works_ru}',
            t2.ru = '{$deliver_quality_ru}',
            t3.ru = '{$all_projects_ru}',
            t4.ru = '{$address_ru}',
            t5.ru = '{$about_us_ru}',
-           t1.ro = '{$our_works_ro}',
+           t6.ru = '{$works_ru}',
+           t7.ru = '{$projects_ru}',
+           t1.ro = '{$all_works_ro}',
            t2.ro = '{$deliver_quality_ro}',
            t3.ro = '{$all_projects_ro}',
            t4.ro = '{$address_ro}',
-           t5.ro = '{$about_us_ro}';
+           t5.ro = '{$about_us_ro}',
+           t6.ro = '{$works_ro}',
+           t7.ro = '{$projects_ro}';
         ";
 
     return  mysqli_query($db->connect,$sql);
@@ -213,13 +220,6 @@ function updateWorkById($id, $uri, $order_index, $title_ro, $title_ru, $title_en
         WHERE id = {$id};
         ";
     }
-//    $sql = "
-//        UPDATE projects
-//        SET uri = '{$uri}', order_index = '{$order_index}', title_ro = '{$title_ro}', title_ro = '{$title_ro}', title_ru = '{$title_ru}',
-//            title_en = '{$title_en}', long_descriprion_ro = '{$long_desc_ro}', long_descriprion_ro = '{$long_desc_ru}', long_descriprion_ro = '{$long_desc_en}',
-//            " . !empty($logo) ? "logo = '{$logo}'," : "," ." meta = '{$meta}'
-//        WHERE id = {$id};
-//    ";
     return mysqli_query($db->connect,$sql);
 }
 
@@ -243,13 +243,6 @@ function updateProjectById($id, $uri, $order_index, $title_ro, $title_ru, $title
         WHERE id = {$id};
         ";
     }
-//    $sql = "
-//        UPDATE projects
-//        SET uri = '{$uri}', order_index = '{$order_index}', title_ro = '{$title_ro}', title_ro = '{$title_ro}', title_ru = '{$title_ru}',
-//            title_en = '{$title_en}', long_descriprion_ro = '{$long_desc_ro}', long_descriprion_ro = '{$long_desc_ru}', long_descriprion_ro = '{$long_desc_en}',
-//            " . !empty($logo) ? "logo = '{$logo}'," : "," ." meta = '{$meta}'
-//        WHERE id = {$id};
-//    ";
     return mysqli_query($db->connect,$sql);
 }
 

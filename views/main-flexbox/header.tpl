@@ -76,7 +76,7 @@
                 //     document.getElementById("hidden_lang").style.display = "none";
                 // });
             </script>
-            <a href="/address/{$lang_url}">{$rsLangs['address'][{$lang}]}</a>
+            {* <a href="/address/{$lang_url}">{$rsLangs['address'][{$lang}]}</a> *}
         </div>
     </div>
 </div>

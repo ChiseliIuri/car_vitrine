@@ -19,6 +19,9 @@
     .call-desktop { display: none !important; }
 }
 @media screen and (max-width: 750px) {
+    #up{
+        bottom: 25% !important;
+    }
     .project_container{
         min-height: auto !important;
     }
@@ -351,7 +354,7 @@ a:hover {
 
 #up{
     position: sticky;
-    bottom: 10%;
+    bottom: 15%;
     left: 90%;
     z-index: 50;
     margin-right: 10px;

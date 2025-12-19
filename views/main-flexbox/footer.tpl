@@ -1,8 +1,8 @@
 <div class="footer">
-    <div class="call-desktop"><img src="/images/icons/call.svg" alt="call"  width="30" height="30"><span style="margin-left: 15px; font-size: 30px">{$rsSettings['0']['value']}</span></div>
+    {* <div class="call-desktop"><img src="/images/icons/call.svg" alt="call"  width="30" height="30"><span style="margin-left: 15px; font-size: 30px">{$rsSettings['0']['value']}</span></div>
     <a class="call-mobile" href="tel:{$rsSettings['0']['value']}">
         <img src="/images/icons/call.svg" alt="call"  width="30" height="30"><span style="margin-left: 15px; font-size: 30px">CALL US</span>
-    </a>
+    </a> *}
     <div class="follow_us">
         <p>FOLLOW US</p>
         <div class="follow_links">
