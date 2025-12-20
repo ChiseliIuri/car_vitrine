@@ -11,7 +11,7 @@ include_once '../config/db.php';
 include_once '../library/mainFunctions.php'; //Functii principale
 
 //indicam cu ce controller vom lucra
-$controllerName = isset($_GET['controller']) ? ucfirst($_GET['controller']) : 'index';
+$controllerName = isset($_GET['controller']) ? ucfirst($_GET['controller']) : 'Index';
 
 if ($controllerName == "Project") {
     $actionName = 'index';
